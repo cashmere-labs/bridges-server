@@ -1,23 +1,23 @@
-import { getLatestBlock, getLatestBlockNumber, getTimestampBySolanaSlot } from "./blocks";
 import { Chain } from "@defillama/sdk/build/general";
-import { sql } from "./db";
-import { getBridgeID } from "./wrappa/postgres/query";
-import { insertTransactionRow, insertConfigRow, insertErrorRow } from "./wrappa/postgres/write";
-import bridgeNetworks from "../data/bridgeNetworkData";
-import adapters from "../adapters";
-import { maxBlocksToQueryByChain, nonBlocksChains } from "./constants";
-import { store } from "./s3";
-import { BridgeAdapter, AsyncBridgeAdapter } from "../helpers/bridgeAdapter.type";
-import { getCurrentUnixTimestamp } from "./date";
-import type { RecordedBlocks } from "./types";
-import { wait } from "../helpers/etherscan";
 import { lookupBlock } from "@defillama/sdk/build/util";
-import { BridgeNetwork } from "../data/types";
 import { groupBy } from "lodash";
-import { getProvider } from "./provider";
-import { sendDiscordText } from "./discord";
+import adapters from "../adapters";
+import bridgeNetworks from "../data/bridgeNetworkData";
+import { BridgeNetwork } from "../data/types";
+import { AsyncBridgeAdapter, BridgeAdapter } from "../helpers/bridgeAdapter.type";
+import { wait } from "../helpers/etherscan";
 import { getConnection } from "../helpers/solana";
 import { chainMappings } from "../helpers/tokenMappings";
+import { getLatestBlock, getLatestBlockNumber } from "./blocks";
+import { maxBlocksToQueryByChain, nonBlocksChains } from "./constants";
+import { getCurrentUnixTimestamp } from "./date";
+import { sql } from "./db";
+import { sendDiscordText } from "./discord";
+import { getProvider } from "./provider";
+import { store } from "./s3";
+import type { RecordedBlocks } from "./types";
+import { getBridgeID } from "./wrappa/postgres/query";
+import { insertConfigRow, insertErrorRow, insertTransactionRow } from "./wrappa/postgres/write";
 const axios = require("axios");
 const retry = require("async-retry");
 
@@ -358,7 +358,7 @@ export const runAllAdaptersTimestampRange = async (
   console.log("runAllAdaptersTimestampRange successfully ran.");
 };
 
-const bridgesToSkip = ["wormhole", "layerzero", "hyperlane", "intersoon", "relay", "cashmere", "teleswap"];
+const bridgesToSkip = ["wormhole", "layerzero", "hyperlane", "intersoon", "relay", "cashmere", "teleswap", "mayan"];
 
 export const runAdapterHistorical = async (
   startBlock: number,
